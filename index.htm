@@ -2,153 +2,158 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>瑞濱 Rui-Bin——情感、文字與聲音的距離</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>瑞濱 Rui-Bin——手機播放器分頁</title>
 <style>
-  body {
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0; padding: 0; height: 100vh; width: 100vw;
+    overflow-x: hidden;
     font-family: 'Arial', sans-serif;
     background: #0A1D2A;
     color: #d1ccbb;
-    margin: 0;
-    padding: 0;
+  }
+
+  .slider {
     display: flex;
-    flex-direction: column;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
     height: 100vh;
-    overflow: hidden;
+    width: 100vw;
   }
-  .header-image {
-    width: 100%;
-    max-height: 150px;
-    object-fit: cover;
+
+  .slider::-webkit-scrollbar {
+    display: none;
   }
-  .container {
-    flex-grow: 1;
+  .slider {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .slide {
+    scroll-snap-align: start;
+    flex: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: center;
-    padding: 0 10px;
-    overflow: hidden;
+    background-color: rgb(10,29,42);
   }
-  .audio-controls {
-    width: 100%;
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgb(25, 24, 32);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  }
+
   .audio-image {
-    width: 100%;
-    aspect-ratio: 1 / 1; /* 正方形 */
+    width: 80vw;
+    max-width: 350px;
+    height: 80vw;
+    max-height: 350px;
+    border-radius: 15px;
     object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 13px rgba(0,0,0,0.2);
-    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
   }
+  .audio-image:hover {
+    transform: scale(1.05);
+  }
+
   .image-name {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    color: #dfdfdf;
   }
+
   .progress-bar {
-    width: 100%;
-    height: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #ddd;
+    width: 80vw;
+    max-width: 350px;
+    height: 14px;
+    border-radius: 10px;
+    -webkit-appearance: none;
+    background: #444;
+    margin-bottom: 25px;
   }
+  .progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: #d1ccbb;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -4px;
+    box-shadow: 0 0 6px #d1ccbb;
+  }
+  .progress-bar::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: #d1ccbb;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 6px #d1ccbb;
+  }
+
   .button-row {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    width: 100%;
+    align-items: center;
+    gap: 15px;
+    width: 80vw;
+    max-width: 350px;
   }
+
   button, select {
-    flex: 1;
-    height: 40px;
-    font-size: 18px;
-    border-radius: 10px;
     border: none;
-    cursor: pointer;
     background-color: #d1ccbb;
     color: #0A1D2A;
-    transition: background-color 0.3s;
+    font-size: 18px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
   }
   button:hover, select:hover {
-    background-color: #b6ad8e;
+    background-color: #ecda89;
   }
-  .nav-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 400px;
-    margin-top: 15px;
-  }
-  .nav-buttons button {
-    flex: none;
-    width: 120px;
-  }
-  @media (min-width: 600px) {
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-    }
+  select {
+    padding: 8px 12px;
+    font-size: 17px;
   }
 </style>
 </head>
 <body>
 
-<img src="header-image.jpg" alt="Header Image" class="header-image" />
-
-<div class="container" id="container">
-  <!-- 單一播放器區 -->
-</div>
-
-<div class="nav-buttons">
-  <button id="prevBtn">上一個</button>
-  <button id="nextBtn">下一個</button>
+<div class="slider" id="slider">
+  <!-- JS 生成播放器 -->
 </div>
 
 <script>
-  const totalAudios = 30;
+  const totalPages = 30;  // 從 6 改為 30
   const speedLevels = [1, 1.25, 1.5, 2];
-  let currentIndex = 1;
+  const slider = document.getElementById('slider');
 
-  const container = document.getElementById('container');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
+  for (let i = 1; i <= totalPages; i++) {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
 
-  function createAudioControl(index) {
-    container.innerHTML = ''; // 清空內容
+    const img = document.createElement('img');
+    img.src = `audio${i}.jpg`;
+    img.alt = `作品名稱 ${i}`;
+    img.className = 'audio-image';
 
-    // 建立audio element
-    const audio = document.createElement('audio');
-    audio.id = `audio${index}`;
-    audio.src = `audio${index}.mp3`;
-    audio.dataset.speedIndex = 0;
-
-    // 主控div
-    const controlDiv = document.createElement('div');
-    controlDiv.className = 'audio-controls';
-
-    // 圖片
-    const image = document.createElement('img');
-    image.src = `audio${index}.jpg`;
-    image.alt = `audio${index}圖片`;
-    image.className = 'audio-image';
-    controlDiv.appendChild(image);
-
-    // 名稱
     const imageName = document.createElement('div');
     imageName.className = 'image-name';
-    imageName.textContent = `作品名稱 ${index}`;
-    controlDiv.appendChild(imageName);
+    imageName.textContent = `作品名稱 ${i}`;
 
-    // 進度條
+    const audio = document.createElement('audio');
+    audio.id = `audio${i}`;
+    audio.src = `audio${i}.mp3`;
+    audio.preload = "metadata";
+
     const progressBar = document.createElement('input');
     progressBar.type = 'range';
     progressBar.className = 'progress-bar';
@@ -156,36 +161,22 @@
     progressBar.max = 100;
     progressBar.value = 0;
     progressBar.step = 1;
-    progressBar.addEventListener('input', () => {
-      audio.currentTime = (audio.duration / 100) * progressBar.value;
-    });
-    controlDiv.appendChild(progressBar);
 
-    // 按鈕列
     const buttonRow = document.createElement('div');
     buttonRow.className = 'button-row';
 
     const rewindBtn = document.createElement('button');
     rewindBtn.textContent = '⏮';
-    rewindBtn.onclick = () => { audio.currentTime = Math.max(0, audio.currentTime - 5); };
+    rewindBtn.onclick = () => skipAudio(audio.id, -5);
 
-    const toggleBtn = document.createElement('button');
-    toggleBtn.textContent = '▶';
-    toggleBtn.onclick = () => {
-      if(audio.paused) {
-        audio.play();
-        toggleBtn.textContent = '⏸';
-      } else {
-        audio.pause();
-        toggleBtn.textContent = '▶';
-      }
-    };
+    const playBtn = document.createElement('button');
+    playBtn.textContent = '▶';
+    playBtn.id = `btn-${audio.id}`;
+    playBtn.onclick = () => togglePlay(audio.id, playBtn);
 
     const forwardBtn = document.createElement('button');
     forwardBtn.textContent = '⏭';
-    forwardBtn.onclick = () => {
-      audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
-    };
+    forwardBtn.onclick = () => skipAudio(audio.id, 5);
 
     const speedSelect = document.createElement('select');
     speedLevels.forEach(speed => {
@@ -194,62 +185,64 @@
       option.textContent = `${speed}x`;
       speedSelect.appendChild(option);
     });
-    speedSelect.onchange = () => {
-      audio.playbackRate = speedSelect.value;
-    };
+    speedSelect.onchange = () => adjustSpeed(audio.id, speedSelect);
 
     buttonRow.appendChild(rewindBtn);
-    buttonRow.appendChild(toggleBtn);
+    buttonRow.appendChild(playBtn);
     buttonRow.appendChild(forwardBtn);
     buttonRow.appendChild(speedSelect);
 
-    controlDiv.appendChild(buttonRow);
-    container.appendChild(controlDiv);
+    slide.appendChild(img);
+    slide.appendChild(imageName);
+    slide.appendChild(audio);
+    slide.appendChild(progressBar);
+    slide.appendChild(buttonRow);
 
-    // 更新進度條
+    slider.appendChild(slide);
+
     audio.addEventListener('timeupdate', () => {
-      if(audio.duration) {
+      if (audio.duration) {
         progressBar.value = (audio.currentTime / audio.duration) * 100;
       }
     });
 
-    // 音樂播放完畢自動切換下一首
-    audio.addEventListener('ended', () => {
-      nextAudio();
+    progressBar.addEventListener('input', () => {
+      if (audio.duration) {
+        audio.currentTime = (progressBar.value / 100) * audio.duration;
+      }
+    });
+  }
+
+  function togglePlay(audioId, button) {
+    const audio = document.getElementById(audioId);
+    const allAudios = document.querySelectorAll('audio');
+
+    allAudios.forEach(aud => {
+      if (aud !== audio && !aud.paused) {
+        aud.pause();
+        const btn = document.getElementById(`btn-${aud.id}`);
+        if (btn) btn.textContent = '▶';
+      }
     });
 
-    // 停止其它音檔播放（雖然此頁只有一個）
-    audio.addEventListener('play', () => {
-      document.querySelectorAll('audio').forEach(otherAudio => {
-        if (otherAudio !== audio) {
-          otherAudio.pause();
-        }
-      });
-    });
-
-    return audio;
+    if (audio.paused) {
+      audio.play();
+      button.textContent = '⏸';
+    } else {
+      audio.pause();
+      button.textContent = '▶';
+    }
   }
 
-  function showAudio(index) {
-    if(index < 1) index = totalAudios;
-    if(index > totalAudios) index = 1;
-    currentIndex = index;
-    createAudioControl(index);
+  function skipAudio(audioId, seconds) {
+    const audio = document.getElementById(audioId);
+    audio.currentTime = Math.min(Math.max(0, audio.currentTime + seconds), audio.duration || 0);
   }
 
-  function prevAudio() {
-    showAudio(currentIndex - 1);
+  function adjustSpeed(audioId, select) {
+    const audio = document.getElementById(audioId);
+    audio.playbackRate = parseFloat(select.value);
   }
-
-  function nextAudio() {
-    showAudio(currentIndex + 1);
-  }
-
-  prevBtn.addEventListener('click', prevAudio);
-  nextBtn.addEventListener('click', nextAudio);
-
-  // 初始化顯示第一個
-  showAudio(currentIndex);
 </script>
 
 </body>
