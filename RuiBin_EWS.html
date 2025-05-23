@@ -1,0 +1,524 @@
+<!DOCTYPE html> 
+<html lang="zh-TW"> 
+    <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞濱 Rui-Bin——情感、文字與聲音的距離</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: #0A1D2A;
+            color: #d1ccbb;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            }
+
+        .intro-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 1;
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        .intro-text {
+            font-size: 36px;
+            font-family: 'Georgia', serif;
+            color: #d1ccbb;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInText 2s ease-out 0.5s forwards;
+        }
+
+        .enter-button {
+            width: 125px;
+            height: 50px;
+            margin-top: 30px;
+            padding: 0px 0px;
+            font-size: 16px;
+            background-color: #d1ccb
+            color: #0A1D2A;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            opacity: 0;
+            animation: fadeInButton 2s ease-out 1s forwards;
+        }
+
+        .enter-button:hover {
+            background-color:  #35287c;
+        }
+        
+        .enter-button:hover::after {
+            content: "Let's go!";
+            font-size: 18px;
+            color: #0A1D2A;
+        }
+
+        .enter-button::after {
+            content: "開始探索";
+            font-size: 16px;
+            color: #0A1D2A;
+            transition: all 0.3s ease; /* 平滑過渡效果 */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInButton {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-out {
+            animation: fadeOut 2s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-container">
+        <div class="intro-text">瑞濱 Rui-Bin</div>
+        <div class="intro-text" style="font-size: 20px; margin-top: 10px;">情感、文字與聲音的距離</div>
+        <button class="enter-button" onclick="enterSite()"></button>
+    </div>
+
+    <script>
+        
+        function enterSite() {
+            // 應用fade-out效果，並隱藏intro-container
+            document.querySelector('.intro-container').classList.add('fade-out');
+            setTimeout(() => {
+                document.querySelector('.intro-container').style.display = 'none';
+                document.querySelector('.main-content').style.display = 'block';
+            }, 2000); // 等待動畫結束後再顯示主內容
+        }
+    </script>
+</body>
+</html>
+
+    
+    
+    <head>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞濱 Rui-Bin——情感、文字與聲音的距離</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0A1D2A; /* 低明度、低彩度藍色 */
+            color: #2b0707;
+            margin: 0;
+            padding: 0;
+            max-width: 1920px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: auto;
+        }
+
+        h2 {
+            font-family: 'Georgia', serif;
+            text-align: center;
+            font-size: 38px;
+            font-weight: bold; /* 加粗 */
+            margin-top: 40px;
+            color: #d1ccbb;
+            margin-bottom: 0px;
+        }
+
+        .description {
+            font-family: 'Arial', sans-serif;
+            font-size: 24px;
+            text-align: center;
+            color: #c2c2c2;
+            margin-top: 70px;
+            margin-bottom: 20px;
+        }
+
+        .engdescription {
+            font-family: 'Arial', sans-serif;
+            font-size: 20px;
+            text-align: center;
+            color: #c2c2c2;
+            margin-top: 5px;
+            margin-bottom: 18px;
+        }
+        
+        .engh2 {
+            font-family: 'Georgia', serif;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold; /* 加粗 */
+            margin-top: 0px;
+            color: #d1ccbb;
+            margin-bottom: 5px;
+        }
+
+        .header-image {
+            width: 1920px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 0px;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0px;
+            text-align: center;
+            flex-grow: 1;
+            overflow: auto;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 40px;
+            text-align: center;
+            justify-items: center;
+            margin-top: 55px;
+            margin-bottom: 40px;
+        }
+
+        .audio-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #cccccc;
+            padding: 13px;
+            background-color: rgb(25, 24, 32);
+            border-radius: 10px;
+            width: 310px;
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .audio-controls:hover {
+            transform: scale(1.05);
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 9px;
+            width: 100%;
+            margin-top: 0px;
+        }
+
+        button, select {
+            width: 50px;
+            height: 40px;
+            font-size: 19px;
+            font-family: 'Arial', sans-serif;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover, select:hover {
+            background-color: #e0e0e0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            gap: 30px;
+            flex-direction: row;
+        }
+
+        .pagination button {
+            width: 80px;
+            height: 40px;
+            font-size: 16px;
+            background-color: #e0dcb8;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        .pagination button:hover {
+            background-color: #ecda89;
+        }
+
+        .audio-image {
+            width: 292px;
+            height: 292px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 13px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .audio-image:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-bar {
+            width: 292px;
+            height: 12px;
+            margin-top: 12px;
+            border-radius: 7px;
+            background-color: #ddd;
+        }
+
+        .background {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .image-name {
+            font-size: 21px;
+            color: #dfdfdf;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        .page-info {
+            font-size: 21px;
+            color: #acacac;
+            margin-top: 0px;
+        }
+
+        .pagination-button {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 36px;
+        }
+
+        .pagination-button button {
+            width: 108px;
+            height: 50px;
+            font-size: 22px;
+            padding: 11px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+
+
+
+<body>
+    <img src="header-image.jpg" alt="Header Image" class="header-image">
+
+    <div class="background">
+        <div class="container-inner">
+            <h2>瑞濱 Rui-Bin<span style="font-family: 'Noto Sans TC', sans-serif;"> —— </span>情感、文字與聲音的距離
+            </h2>
+
+            <div class="engh2">
+                Rui-Bin — The distance of Emotion, Words, and Sound
+            </div>
+
+            
+
+            <div id="audio-container"></div> <!-- 音檔顯示區 -->
+            <div class="button-grid" id="button-container"></div> <!-- 控制按鈕區 -->
+            
+            <div class="description">
+                這裡是來自新北市瑞芳區瑞濱國小小朋友們的聲音，一起來聆聽他們天馬行空的創意和想說的話吧。<br>
+            </div>
+            
+            <div class="engdescription">
+                Here are the voices of the children from Rui-Bin Elementary School in Ruifang District, New Taipei City. Let's listen to their boundless creativity and the thoughts they wish to share!
+            </div>
+
+            <div class="pagination">
+                <button class="pagination-prev" onclick="prevPage()">上一頁</button>
+                <div class="page-info" id="page-info-display"></div>
+                <button class="pagination-next" onclick="nextPage()">下一頁</button>
+            </div>
+
+            <div class="image-name" id="image-name"></div> <!-- 音檔名稱 -->
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 6;
+        const audiosPerPage = 5;
+        const totalAudios = totalPages * audiosPerPage;
+        const speedLevels = [1, 1.25, 1.5, 2];
+
+        function generateAudioElements() {
+            const audioContainer = document.getElementById("audio-container");
+            const buttonContainer = document.getElementById("button-container");
+            const imageNameContainer = document.getElementById("image-name");
+            const pageInfoDisplay = document.getElementById("page-info-display");
+
+            audioContainer.innerHTML = "";
+            buttonContainer.innerHTML = "";
+            imageNameContainer.innerHTML = "";
+
+            let start = (currentPage - 1) * audiosPerPage + 1;
+            let end = start + audiosPerPage;
+            
+            for (let i = start; i < end; i++) {
+                let audio = document.createElement("audio");
+                audio.id = `audio${i}`;
+                audio.src = `audio${i}.mp3`;
+                audio.dataset.speedIndex = 0;
+                audioContainer.appendChild(audio);
+                
+                let controlDiv = document.createElement("div");
+                controlDiv.className = "audio-controls";
+
+                let image = document.createElement("img");
+                image.src = `audio${i}.jpg`;
+                image.className = "audio-image";
+                controlDiv.appendChild(image);
+
+                let imageName = document.createElement("div");
+                imageName.className = "image-name";
+                imageName.textContent = `作品名稱 ${i}`;
+                controlDiv.appendChild(imageName);
+
+                let progressBar = document.createElement("input");
+                progressBar.type = "range";
+                progressBar.className = "progress-bar";
+                progressBar.min = "0";
+                progressBar.value = "0";
+                progressBar.max = "100";
+                progressBar.step = "1";
+                progressBar.addEventListener("input", () => seekAudio(`audio${i}`, progressBar.value));
+                controlDiv.appendChild(progressBar);
+
+                let buttonRow = document.createElement("div");
+                buttonRow.className = "button-row";
+
+                let rewindBtn = document.createElement("button");
+                rewindBtn.onclick = () => skipAudio(`audio${i}`, -5);
+                rewindBtn.innerHTML = "⏮"; 
+                
+                let toggleBtn = document.createElement("button");
+                toggleBtn.id = `btn-${audio.id}`;
+                toggleBtn.onclick = () => togglePlay(`audio${i}`, toggleBtn);
+                toggleBtn.innerHTML = "▶"; 
+
+                let speedSelect = document.createElement("select");
+                speedSelect.onchange = () => adjustSpeed(`audio${i}`, speedSelect);
+                
+                speedLevels.forEach(speed => {
+                    let option = document.createElement("option");
+                    option.value = speed;
+                    option.textContent = `${speed}x`;
+                    speedSelect.appendChild(option);
+                });
+
+                let forwardBtn = document.createElement("button");
+                forwardBtn.onclick = () => skipAudio(`audio${i}`, 5);
+                forwardBtn.innerHTML = "⏭"; 
+
+                buttonRow.appendChild(rewindBtn); 
+                buttonRow.appendChild(toggleBtn); 
+                buttonRow.appendChild(forwardBtn); 
+                buttonRow.appendChild(speedSelect); 
+
+                controlDiv.appendChild(buttonRow); 
+                buttonContainer.appendChild(controlDiv);
+
+                audio.addEventListener("timeupdate", () => updateProgressBar(audio, progressBar));
+            }
+
+            pageInfoDisplay.textContent = `第${currentPage}/${totalPages}頁`;
+        }
+
+        function togglePlay(audioId, button) {
+            let audio = document.getElementById(audioId);
+            let allAudios = document.querySelectorAll("audio");
+
+            allAudios.forEach(otherAudio => {
+                if (otherAudio !== audio && !otherAudio.paused) {
+                    otherAudio.pause();
+                    document.getElementById(`btn-${otherAudio.id}`).innerHTML = "▶";
+                }
+            });
+
+            if (audio.paused) {
+                audio.play();
+                button.innerHTML = "⏸";  
+            } else {
+                audio.pause();
+                button.innerHTML = "▶";  
+            }
+        }
+
+        function updateProgressBar(audio, progressBar) {
+            progressBar.value = (audio.currentTime / audio.duration) * 100;
+        }
+
+        function seekAudio(audioId, value) {
+            let audio = document.getElementById(audioId);
+            audio.currentTime = (audio.duration / 100) * value;
+        }
+
+        function skipAudio(audioId, seconds) {
+            let audio = document.getElementById(audioId);
+            audio.currentTime += seconds;
+        }
+
+        function adjustSpeed(audioId, select) {
+            let audio = document.getElementById(audioId);
+            let speed = select.value;
+            audio.playbackRate = speed;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                generateAudioElements();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                generateAudioElements();
+            }
+        }
+
+        generateAudioElements();
+    </script>
+</body>
+</html>
