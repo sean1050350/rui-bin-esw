@@ -16,6 +16,17 @@
     color: #d1ccbb;
   }
 
+  .top-intro {
+    padding: 20px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.6;
+    background-color: #0A1D2A;
+    color: #d1ccbb;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
   .slider {
     display: flex;
     overflow-x: scroll;
@@ -44,6 +55,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgb(10,29,42);
+    position: relative;
   }
 
   .audio-image {
@@ -123,16 +135,29 @@
     padding: 8px 12px;
     font-size: 17px;
   }
+
+  .slide-tip {
+    position: absolute;
+    bottom: 10px;
+    font-size: 16px;
+    color: #aaaaaa;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
+
+<div class="top-intro">
+  這裡是來自新北市瑞芳區瑞濱國小小朋友們的聲音，一起來聆聽他們天馬行空的創意和想說的話吧。<br />
+  <em>Here are the voices of the children from Rui-Bin Elementary School in Ruifang District, New Taipei City. Let's listen to their boundless creativity and the thoughts they wish to share!</em>
+</div>
 
 <div class="slider" id="slider">
   <!-- JS 生成播放器 -->
 </div>
 
 <script>
-  const totalPages = 30;  // 從 6 改為 30
+  const totalPages = 30;
   const speedLevels = [1, 1.25, 1.5, 2];
   const slider = document.getElementById('slider');
 
@@ -192,11 +217,16 @@
     buttonRow.appendChild(forwardBtn);
     buttonRow.appendChild(speedSelect);
 
+    const tip = document.createElement('div');
+    tip.className = 'slide-tip';
+    tip.textContent = '← 左右滑動切換作品 →';
+
     slide.appendChild(img);
     slide.appendChild(imageName);
     slide.appendChild(audio);
     slide.appendChild(progressBar);
     slide.appendChild(buttonRow);
+    slide.appendChild(tip);
 
     slider.appendChild(slide);
 
