@@ -1,402 +1,294 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>瑞濱 Rui-Bin——情感、文字與聲音的距離</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow-x: hidden;
-      overflow-y: hidden; /* 禁用垂直滾軸 */
-      font-family: 'Georgia', serif;
-      background: #0A1D2A;
-      color: #d1ccbb;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start; /* 頂端對齊 */
-      align-items: center;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>瑞濱 Rui-Bin——手機播放器分頁</title>
+<style>
+  /* Reset & 基本樣式 */
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0; padding: 0; height: 100vh; width: 100vw;
+    overflow-x: hidden;
+    font-family: 'Arial', sans-serif;
+    background: #0A1D2A;
+    color: #d1ccbb;
+  }
 
-    .intro-container {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 1000;
-      opacity: 1;
-      animation: fadeIn 2s ease-out forwards;
-    }
+  /* 滑動容器 */
+  .slider {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    height: 100vh;
+    width: 100vw;
+  }
 
-    .intro-text {
-      font-size: 36px;
-      font-family: 'Georgia', serif;
-      color: #d1ccbb;
-      text-align: center;
-      opacity: 0;
-      animation: fadeInText 2s ease-out 0.5s forwards;
-    }
+  /* 隱藏滾動條 */
+  .slider::-webkit-scrollbar {
+    display: none;
+  }
+  .slider {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
 
-    .enter-button {
-      width: 125px;
-      height: 50px;
-      margin-top: 30px;
-      font-size: 16px;
-      background-color: #d1ccbb;
-      color: #0A1D2A;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      opacity: 0;
-      animation: fadeInButton 2s ease-out 1s forwards;
-    }
+  /* 單頁播放器 */
+  .slide {
+    scroll-snap-align: start;
+    flex: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(10,29,42);
+  }
 
-    .enter-button:hover {
-      background-color: #35287c;
-    }
+  /* 大圖片 */
+  .audio-image {
+    width: 80vw;
+    max-width: 350px;
+    height: 80vw;
+    max-height: 350px;
+    border-radius: 15px;
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+  }
+  .audio-image:hover {
+    transform: scale(1.05);
+  }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+  /* 作品名稱 */
+  .image-name {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #dfdfdf;
+  }
 
-    @keyframes fadeInText {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+  /* 進度條 */
+  .progress-bar {
+    width: 80vw;
+    max-width: 350px;
+    height: 14px;
+    border-radius: 10px;
+    -webkit-appearance: none;
+    background: #444;
+    margin-bottom: 25px;
+  }
+  .progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: #d1ccbb;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -4px;
+    box-shadow: 0 0 6px #d1ccbb;
+  }
+  .progress-bar::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: #d1ccbb;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 6px #d1ccbb;
+  }
 
-    @keyframes fadeInButton {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+  /* 播放控制列 */
+  .button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 80vw;
+    max-width: 350px;
+  }
 
-    .fade-out {
-      animation: fadeOut 2s ease-out forwards;
-    }
+  button, select {
+    border: none;
+    background-color: #d1ccbb;
+    color: #0A1D2A;
+    font-size: 18px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  button:hover, select:hover {
+    background-color: #ecda89;
+  }
+  select {
+    padding: 8px 12px;
+    font-size: 17px;
+  }
 
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-
-    /* 將 container-inner 改為 100vw，無左右邊距，最大寬度限制取消 */
-    .container-inner {
-      width: 100vw;
-      margin: 0;
-      padding: 0 10px; /* 可以調整左右內距 */
-      text-align: center;
-      flex-grow: 1;
-      overflow: hidden; /* 防止滾軸 */
-      display: none; /* 預設隱藏，進入後顯示 */
-      box-sizing: border-box;
-    }
-
-    .header-image {
-      width: 100vw;
-      max-height: 200px;
-      height: auto;
-      object-fit: cover;
-      margin-top: 0; /* 移除上方空白 */
-      display: block;
-    }
-
-    h2,
-    .engh2 {
-      color: #d1ccbb;
-    }
-
-    .description,
-    .engdescription {
-      color: #c2c2c2;
-    }
-
-    /* 五個播放器一橫列，無邊界，無滾軸，寬度盡可能大 */
-    .button-grid {
-      display: flex;
-      justify-content: center;
-      gap: 15px;          /* 播放器間距稍微放大 */
-      margin: 20px 0;
-      overflow: visible;
-      flex-wrap: nowrap;  /* 不換行 */
-      width: 100%;        /* 播放器區塊寬度滿版 */
-      box-sizing: border-box;
-    }
-
-    .audio-controls {
-      background-color: transparent !important;
-      border-radius: 0 !important;
-      padding: 0 !important;
-      box-shadow: none !important;
-      flex: 1 1 18%;      /* 五個平均分配寬度 */
-      max-width: none !important;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 0;
-    }
-
-    .audio-image {
-      width: 292px;
-      height: 292px;
-      object-fit: cover;
-      border-radius: 10px;
-      user-select: none;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 12px;
-      border-radius: 7px;
-      background-color: #ddd;
-      margin-top: 12px;
-      cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    .button-row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: nowrap;
-      margin-top: 10px;
-    }
-
-    button,
-    select {
-      font-size: 16px;
-      padding: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .pagination {
-      margin: 30px auto;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .image-name {
-      font-size: 18px;
-      color: #dfdfdf;
-      margin-top: 12px;
-      font-weight: bold;
-      user-select: none;
-    }
-
-    @media (max-width: 600px) {
-      h2 {
-        font-size: 26px;
-      }
-
-      .engh2,
-      .description,
-      .engdescription {
-        font-size: 16px;
-      }
-
-      .button-row button,
-      .button-row select {
-        font-size: 14px;
-        padding: 8px;
-      }
-
-      .audio-controls {
-        flex: 1 1 100%;
-        max-width: 100% !important;
-      }
-
-      .button-grid {
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .header-image {
-        max-height: 150px;
-      }
-    }
-  </style>
+  /* 頁碼指示 */
+  .page-indicator {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #d1ccbb;
+    font-weight: 600;
+    user-select: none;
+  }
+</style>
 </head>
 <body>
-  <div class="intro-container">
-    <div class="intro-text">瑞濱 Rui-Bin</div>
-    <div class="intro-text" style="font-size: 20px; margin-top: 10px;">
-      情感、文字與聲音的距離
-    </div>
-    <button class="enter-button" onclick="enterSite()">開始探索</button>
-  </div>
 
-  <img src="header-image.jpg" alt="Header Image" class="header-image" />
+<div class="slider" id="slider">
+  <!-- 這裡用JS生成每個slide -->
+</div>
 
-  <div class="container-inner">
-    <h2>瑞濱 Rui-Bin —— 情感、文字與聲音的距離</h2>
-    <div class="engh2">Rui-Bin — The distance of Emotion, Words, and Sound</div>
+<div class="page-indicator" id="page-indicator">第1頁 / 6頁</div>
 
-    <div class="description">
-      這裡是來自新北市瑞芳區瑞濱國小小朋友們的聲音，一起來聆聽他們天馬行空的創意和想說的話吧。
-    </div>
-    <div class="engdescription">
-      Here are the voices of the children from Rui-Bin Elementary School in Ruifang District,
-      New Taipei City. Let's listen to their boundless creativity and the thoughts they wish to
-      share!
-    </div>
+<script>
+  const totalPages = 6;
+  const speedLevels = [1, 1.25, 1.5, 2];
 
-    <div class="button-grid" id="button-container"></div>
+  const slider = document.getElementById('slider');
+  const pageIndicator = document.getElementById('page-indicator');
 
-    <div class="pagination">
-      <button onclick="prevPage()">上一頁</button>
-      <div id="page-info-display" style="color:#d1ccbb; line-height: 38px;"></div>
-      <button onclick="nextPage()">下一頁</button>
-    </div>
-  </div>
+  // 動態建立播放器頁面
+  for (let i = 1; i <= totalPages; i++) {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
 
-  <script>
-    function enterSite() {
-      document.querySelector(".intro-container").classList.add("fade-out");
-      setTimeout(() => {
-        document.querySelector(".intro-container").style.display = "none";
-        document.querySelector(".container-inner").style.display = "block";
-      }, 2000);
-    }
+    // 圖片
+    const img = document.createElement('img');
+    img.src = `audio${i}.jpg`;
+    img.alt = `作品名稱 ${i}`;
+    img.className = 'audio-image';
 
-    let currentPage = 1;
-    const totalPages = 6;
-    const audiosPerPage = 5;
-    const speedLevels = [1, 1.25, 1.5, 2];
+    // 作品名稱
+    const imageName = document.createElement('div');
+    imageName.className = 'image-name';
+    imageName.textContent = `作品名稱 ${i}`;
 
-    function generateAudioElements() {
-      const buttonContainer = document.getElementById("button-container");
-      const pageInfoDisplay = document.getElementById("page-info-display");
+    // audio 元素
+    const audio = document.createElement('audio');
+    audio.id = `audio${i}`;
+    audio.src = `audio${i}.mp3`;
+    audio.preload = "metadata";
 
-      buttonContainer.innerHTML = "";
-      // 先移除舊的 audio 元素，避免重複加載
-      document.querySelectorAll("audio").forEach((a) => a.remove());
+    // 進度條
+    const progressBar = document.createElement('input');
+    progressBar.type = 'range';
+    progressBar.className = 'progress-bar';
+    progressBar.min = 0;
+    progressBar.max = 100;
+    progressBar.value = 0;
+    progressBar.step = 1;
 
-      const start = (currentPage - 1) * audiosPerPage + 1;
-      const end = start + audiosPerPage;
+    // 控制按鈕列
+    const buttonRow = document.createElement('div');
+    buttonRow.className = 'button-row';
 
-      for (let i = start; i < end; i++) {
-        const audio = new Audio(`audio${i}.mp3`);
-        audio.id = `audio${i}`;
-        document.body.appendChild(audio);
+    const rewindBtn = document.createElement('button');
+    rewindBtn.textContent = '⏮';
+    rewindBtn.onclick = () => skipAudio(audio.id, -5);
 
-        const controlDiv = document.createElement("div");
-        controlDiv.className = "audio-controls";
+    const playBtn = document.createElement('button');
+    playBtn.textContent = '▶';
+    playBtn.id = `btn-${audio.id}`;
+    playBtn.onclick = () => togglePlay(audio.id, playBtn);
 
-        const image = document.createElement("img");
-        image.src = `audio${i}.jpg`;
-        image.className = "audio-image";
-        controlDiv.appendChild(image);
+    const forwardBtn = document.createElement('button');
+    forwardBtn.textContent = '⏭';
+    forwardBtn.onclick = () => skipAudio(audio.id, 5);
 
-        const imageName = document.createElement("div");
-        imageName.className = "image-name";
-        imageName.textContent = `作品名稱 ${i}`;
-        controlDiv.appendChild(imageName);
+    const speedSelect = document.createElement('select');
+    speedLevels.forEach(speed => {
+      const option = document.createElement('option');
+      option.value = speed;
+      option.textContent = `${speed}x`;
+      speedSelect.appendChild(option);
+    });
+    speedSelect.onchange = () => adjustSpeed(audio.id, speedSelect);
 
-        const progressBar = document.createElement("input");
-        progressBar.type = "range";
-        progressBar.className = "progress-bar";
-        progressBar.min = 0;
-        progressBar.max = 100;
-        progressBar.value = 0;
-        progressBar.step = 1;
-        progressBar.oninput = () => {
-          if (!isNaN(audio.duration)) {
-            audio.currentTime = (audio.duration / 100) * progressBar.value;
-          }
-        };
-        controlDiv.appendChild(progressBar);
+    // 插入控制按鈕
+    buttonRow.appendChild(rewindBtn);
+    buttonRow.appendChild(playBtn);
+    buttonRow.appendChild(forwardBtn);
+    buttonRow.appendChild(speedSelect);
 
-        audio.addEventListener("timeupdate", () => {
-          if (!audio.paused && !isNaN(audio.duration)) {
-            progressBar.value = (audio.currentTime / audio.duration) * 100;
-          }
-        });
+    // 組合 slide
+    slide.appendChild(img);
+    slide.appendChild(imageName);
+    slide.appendChild(audio);
+    slide.appendChild(progressBar);
+    slide.appendChild(buttonRow);
 
-        const buttonRow = document.createElement("div");
-        buttonRow.className = "button-row";
+    slider.appendChild(slide);
 
-        const rewindBtn = document.createElement("button");
-        rewindBtn.textContent = "⏮";
-        rewindBtn.onclick = () => {
-          audio.currentTime = Math.max(0, audio.currentTime - 5);
-        };
-
-        const playBtn = document.createElement("button");
-        playBtn.textContent = "▶";
-        playBtn.onclick = () => {
-          if (audio.paused) {
-            // 暫停其他所有音訊
-            document.querySelectorAll("audio").forEach((a) => {
-              if (a !== audio) {
-                a.pause();
-                const otherPlayBtn = a.parentElement.querySelector(".button-row button:nth-child(2)");
-                if (otherPlayBtn) otherPlayBtn.textContent = "▶";
-              }
-            });
-            audio.play();
-            playBtn.textContent = "⏸";
-          } else {
-            audio.pause();
-            playBtn.textContent = "▶";
-          }
-        };
-
-        const forwardBtn = document.createElement("button");
-        forwardBtn.textContent = "⏭";
-        forwardBtn.onclick = () => {
-          audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
-        };
-
-        const speedSelect = document.createElement("select");
-        speedLevels.forEach((speed) => {
-          const option = document.createElement("option");
-          option.value = speed;
-          option.textContent = `${speed}x`;
-          speedSelect.appendChild(option);
-        });
-        speedSelect.onchange = () => {
-          audio.playbackRate = speedSelect.value;
-        };
-
-        buttonRow.append(rewindBtn, playBtn, forwardBtn, speedSelect);
-        controlDiv.appendChild(buttonRow);
-
-        buttonContainer.appendChild(controlDiv);
+    // 事件監聽：更新進度條
+    audio.addEventListener('timeupdate', () => {
+      if(audio.duration) {
+        progressBar.value = (audio.currentTime / audio.duration) * 100;
       }
+    });
 
-      pageInfoDisplay.textContent = `第${currentPage}/${totalPages}頁`;
-    }
-
-    function prevPage() {
-      if (currentPage > 1) {
-        currentPage--;
-        generateAudioElements();
+    // 用滑桿調整播放位置
+    progressBar.addEventListener('input', () => {
+      if(audio.duration) {
+        audio.currentTime = (progressBar.value / 100) * audio.duration;
       }
-    }
+    });
+  }
 
-    function nextPage() {
-      if (currentPage < totalPages) {
-        currentPage++;
-        generateAudioElements();
+  // 播放控制函數
+  function togglePlay(audioId, button) {
+    const audio = document.getElementById(audioId);
+    const allAudios = document.querySelectorAll('audio');
+
+    // 暫停其他音檔
+    allAudios.forEach(aud => {
+      if (aud !== audio && !aud.paused) {
+        aud.pause();
+        const btn = document.getElementById(`btn-${aud.id}`);
+        if (btn) btn.textContent = '▶';
       }
-    }
+    });
 
-    window.onload = () => {
-      generateAudioElements();
-    };
-  </script>
+    if (audio.paused) {
+      audio.play();
+      button.textContent = '⏸';
+    } else {
+      audio.pause();
+      button.textContent = '▶';
+    }
+  }
+
+  function skipAudio(audioId, seconds) {
+    const audio = document.getElementById(audioId);
+    audio.currentTime = Math.min(Math.max(0, audio.currentTime + seconds), audio.duration || 0);
+  }
+
+  function adjustSpeed(audioId, select) {
+    const audio = document.getElementById(audioId);
+    audio.playbackRate = parseFloat(select.value);
+  }
+
+  // 更新頁碼指示
+  slider.addEventListener('scroll', () => {
+    const scrollLeft = slider.scrollLeft;
+    const pageWidth = window.innerWidth;
+    const pageNum = Math.round(scrollLeft / pageWidth) + 1;
+    pageIndicator.textContent = `第${pageNum}頁 / ${totalPages}頁`;
+  });
+
+</script>
+
 </body>
 </html>
-
-
-
