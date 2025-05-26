@@ -174,7 +174,7 @@
 
     const imageName = document.createElement('div');
     imageName.className = 'image-name';
-    imageName.textContent = `作品名稱 ${i}`;
+    imageName.textContent = (i === 3 || i === 22) ? `作品名稱 ${i}（無錄音）` : `作品名稱 ${i}`;
 
     const audio = document.createElement('audio');
     audio.id = `audio${i}`;
