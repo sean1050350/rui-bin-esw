@@ -169,12 +169,12 @@
 
     const img = document.createElement('img');
     img.src = `image/audio${i}.jpg`;
-    img.alt = `作品名稱 ${i}`;
+    img.alt = `作品編號 ${i}`;
     img.className = 'audio-image';
 
     const imageName = document.createElement('div');
     imageName.className = 'image-name';
-    imageName.textContent = (i === 3 || i === 22) ? `作品名稱 ${i}（無錄音）` : `作品名稱 ${i}`;
+    imageName.textContent = (i === 3 || i === 22) ? `作品編號 ${i}（無錄音）` : `作品編號 ${i}`;
 
     const audio = document.createElement('audio');
     audio.id = `audio${i}`;
